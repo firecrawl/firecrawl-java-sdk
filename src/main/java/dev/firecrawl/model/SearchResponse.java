@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Response from a search request.
@@ -17,6 +18,8 @@ public class SearchResponse extends BaseResponse {
 
     // Accept either an array or an object for the `data` field from the API
     private JsonElement data;
+    private String id;
+    private Integer creditsUsed;
 
     /**
      * Returns the search results as an array, normalizing various API shapes.
@@ -24,7 +27,8 @@ public class SearchResponse extends BaseResponse {
      * @return the search results array (never null)
      */
     public SearchResult[] getData() {
-        return parseResults();
+        SearchResult[] web = parseResultsFromSource("web");
+        return web != null ? web : parseResults();
     }
 
     /**
@@ -33,9 +37,67 @@ public class SearchResponse extends BaseResponse {
      * @return the search results list (never null)
      */
     public List<SearchResult> getResults() {
-        SearchResult[] arr = parseResults();
+        SearchResult[] arr = getData();
         if (arr.length == 0) return Collections.emptyList();
         return Arrays.asList(arr);
+    }
+
+    /**
+     * Returns web search results if available.
+     */
+    public SearchResult[] getWebResults() {
+        SearchResult[] web = parseResultsFromSource("web");
+        return web != null ? web : new SearchResult[0];
+    }
+
+    /**
+     * Returns image search results if available.
+     */
+    public SearchImageResult[] getImageResults() {
+        JsonArray arr = getSourceArray("images");
+        if (arr == null) return new SearchImageResult[0];
+        java.util.ArrayList<SearchImageResult> list = new java.util.ArrayList<>();
+        for (JsonElement el : arr) {
+            if (el != null && el.isJsonObject()) {
+                try {
+                    SearchImageResult r = GSON.fromJson(el, SearchImageResult.class);
+                    if (r != null) list.add(r);
+                } catch (Exception ignored) { }
+            }
+        }
+        return list.toArray(new SearchImageResult[0]);
+    }
+
+    /**
+     * Returns news search results if available.
+     */
+    public SearchNewsResult[] getNewsResults() {
+        JsonArray arr = getSourceArray("news");
+        if (arr == null) return new SearchNewsResult[0];
+        java.util.ArrayList<SearchNewsResult> list = new java.util.ArrayList<>();
+        for (JsonElement el : arr) {
+            if (el != null && el.isJsonObject()) {
+                try {
+                    SearchNewsResult r = GSON.fromJson(el, SearchNewsResult.class);
+                    if (r != null) list.add(r);
+                } catch (Exception ignored) { }
+            }
+        }
+        return list.toArray(new SearchNewsResult[0]);
+    }
+
+    /**
+     * Returns the request id if provided by the API.
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Returns the credits used if provided by the API.
+     */
+    public Integer getCreditsUsed() {
+        return creditsUsed;
     }
 
     private SearchResult[] parseResults() {
@@ -148,6 +210,57 @@ public class SearchResponse extends BaseResponse {
         return new SearchResult[0];
     }
 
+    private SearchResult[] parseResultsFromSource(String key) {
+        JsonArray arr = getSourceArray(key);
+        if (arr == null) return null;
+        return normalizeArray(arr);
+    }
+
+    private JsonArray getSourceArray(String key) {
+        if (data == null || data.isJsonNull()) return null;
+        if (data.isJsonArray()) {
+            // treat array as direct web results
+            return key != null && "web".equals(key) ? data.getAsJsonArray() : null;
+        }
+        if (!data.isJsonObject()) return null;
+        JsonObject obj = data.getAsJsonObject();
+
+        // data may nest sources under "data"
+        if (obj.has("data") && obj.get("data").isJsonObject()) {
+            JsonObject dataObj = obj.getAsJsonObject("data");
+            JsonArray nested = extractSourceArray(dataObj, key);
+            if (nested != null) return nested;
+        }
+
+        return extractSourceArray(obj, key);
+    }
+
+    private JsonArray extractSourceArray(JsonObject obj, String key) {
+        if (obj.has(key)) {
+            JsonElement src = obj.get(key);
+            if (src.isJsonArray()) return src.getAsJsonArray();
+            if (src.isJsonObject()) {
+                JsonObject srcObj = src.getAsJsonObject();
+                if (srcObj.has("results") && srcObj.get("results").isJsonArray()) {
+                    return srcObj.getAsJsonArray("results");
+                }
+                if (srcObj.has("data") && srcObj.get("data").isJsonArray()) {
+                    return srcObj.getAsJsonArray("data");
+                }
+                if (srcObj.has("items") && srcObj.get("items").isJsonArray()) {
+                    return srcObj.getAsJsonArray("items");
+                }
+                if (srcObj.has("organic_results") && srcObj.get("organic_results").isJsonArray()) {
+                    return srcObj.getAsJsonArray("organic_results");
+                }
+                if (srcObj.has("value") && srcObj.get("value").isJsonArray()) {
+                    return srcObj.getAsJsonArray("value");
+                }
+            }
+        }
+        return null;
+    }
+
     private SearchResult[] normalizeArray(com.google.gson.JsonArray arr) {
         java.util.ArrayList<SearchResult> list = new java.util.ArrayList<>();
         for (JsonElement el : arr) {
@@ -251,6 +364,11 @@ public class SearchResponse extends BaseResponse {
         if (description != null) dst.addProperty("description", description);
         if (url != null) dst.addProperty("url", url);
 
+        Integer position = firstInt(src, "position", "rank");
+        if (position != null) dst.addProperty("position", position);
+        String category = firstString(src, "category");
+        if (category != null) dst.addProperty("category", category);
+
         // If there was no metadata, synthesize minimal metadata from what we found
         if (!dst.has("metadata")) {
             JsonObject meta = new JsonObject();
@@ -315,6 +433,8 @@ public class SearchResponse extends BaseResponse {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + Arrays.hashCode(getData());
+        result = 31 * result + Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(creditsUsed);
         return result;
     }
 
@@ -323,6 +443,8 @@ public class SearchResponse extends BaseResponse {
         return "SearchResponse{" +
                 "success=" + isSuccess() +
                 ", warning='" + getWarning() + '\'' +
+                ", id='" + id + '\'' +
+                ", creditsUsed=" + creditsUsed +
                 ", results=" + Arrays.toString(getData()) +
                 '}';
     }

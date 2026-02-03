@@ -9,6 +9,11 @@ import java.util.Objects;
 public class CrawlStatusResponse extends BaseResponse {
     private String status;
     private FirecrawlDocument[] data;
+    private Integer total;
+    private Integer completed;
+    private Integer creditsUsed;
+    private String expiresAt;
+    private String next;
 
     /**
      * Returns the status of the crawl job.
@@ -26,6 +31,41 @@ public class CrawlStatusResponse extends BaseResponse {
      */
     public FirecrawlDocument[] getData() {
         return data;
+    }
+
+    /**
+     * Returns total items expected.
+     */
+    public Integer getTotal() {
+        return total;
+    }
+
+    /**
+     * Returns completed items count.
+     */
+    public Integer getCompleted() {
+        return completed;
+    }
+
+    /**
+     * Returns credits used if provided.
+     */
+    public Integer getCreditsUsed() {
+        return creditsUsed;
+    }
+
+    /**
+     * Returns expiration timestamp if provided.
+     */
+    public String getExpiresAt() {
+        return expiresAt;
+    }
+
+    /**
+     * Returns the next page cursor if provided.
+     */
+    public String getNext() {
+        return next;
     }
 
     /**
@@ -62,13 +102,23 @@ public class CrawlStatusResponse extends BaseResponse {
         if (!super.equals(o)) return false;
         CrawlStatusResponse that = (CrawlStatusResponse) o;
         return Objects.equals(status, that.status) &&
-                Arrays.equals(data, that.data);
+                Arrays.equals(data, that.data) &&
+                Objects.equals(total, that.total) &&
+                Objects.equals(completed, that.completed) &&
+                Objects.equals(creditsUsed, that.creditsUsed) &&
+                Objects.equals(expiresAt, that.expiresAt) &&
+                Objects.equals(next, that.next);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(super.hashCode(), status);
         result = 31 * result + Arrays.hashCode(data);
+        result = 31 * result + Objects.hashCode(total);
+        result = 31 * result + Objects.hashCode(completed);
+        result = 31 * result + Objects.hashCode(creditsUsed);
+        result = 31 * result + Objects.hashCode(expiresAt);
+        result = 31 * result + Objects.hashCode(next);
         return result;
     }
 
@@ -79,6 +129,11 @@ public class CrawlStatusResponse extends BaseResponse {
                 ", warning='" + getWarning() + '\'' +
                 ", status='" + status + '\'' +
                 ", data=" + Arrays.toString(data) +
+                ", total=" + total +
+                ", completed=" + completed +
+                ", creditsUsed=" + creditsUsed +
+                ", expiresAt='" + expiresAt + '\'' +
+                ", next='" + next + '\'' +
                 '}';
     }
 }

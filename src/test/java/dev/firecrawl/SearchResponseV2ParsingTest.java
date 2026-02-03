@@ -74,4 +74,29 @@ public class SearchResponseV2ParsingTest {
         assertNotNull(resp.getResults());
         assertEquals(0, resp.getResults().size());
     }
+
+    @Test
+    public void parsesImagesNewsAndMetadata() {
+        String json = "{\n" +
+                "  \"success\": true,\n" +
+                "  \"id\": \"sr_1\",\n" +
+                "  \"creditsUsed\": 2,\n" +
+                "  \"data\": {\n" +
+                "    \"web\": [ { \"title\": \"W\", \"url\": \"https://w.com\", \"position\": 1, \"category\": \"general\" } ],\n" +
+                "    \"images\": [ { \"title\": \"I\", \"url\": \"https://i.com\", \"imageUrl\": \"https://img.com\", \"imageWidth\": 100, \"imageHeight\": 80, \"source\": \"Site\", \"sourceUrl\": \"https://source.com\", \"position\": 3 } ],\n" +
+                "    \"news\": [ { \"title\": \"N\", \"url\": \"https://n.com\", \"snippet\": \"s\", \"source\": \"News\", \"sourceUrl\": \"https://news.com\", \"date\": \"2024-01-01\", \"imageUrl\": \"https://img2.com\", \"position\": 2 } ]\n" +
+                "  }\n" +
+                "}";
+        SearchResponse resp = GSON.fromJson(json, SearchResponse.class);
+        assertEquals("sr_1", resp.getId());
+        assertEquals(2, resp.getCreditsUsed());
+        assertEquals(1, resp.getWebResults().length);
+        assertEquals("W", resp.getWebResults()[0].getTitle());
+        assertEquals(1, resp.getWebResults()[0].getPosition());
+        assertEquals("general", resp.getWebResults()[0].getCategory());
+        assertEquals(1, resp.getImageResults().length);
+        assertEquals("https://img.com", resp.getImageResults()[0].getImageUrl());
+        assertEquals(1, resp.getNewsResults().length);
+        assertEquals("N", resp.getNewsResults()[0].getTitle());
+    }
 }

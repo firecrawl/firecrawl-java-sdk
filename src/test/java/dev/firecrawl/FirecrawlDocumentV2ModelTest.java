@@ -26,6 +26,8 @@ public class FirecrawlDocumentV2ModelTest {
                 "    \"visibility\": \"public\",\n" +
                 "    \"diff\": \"-a +b\"\n" +
                 "  },\n" +
+                "  \"branding\": { \"logo\": \"https://logo\" },\n" +
+                "  \"warning\": \"partial\",\n" +
                 "  \"metadata\": { \"foo\": \"bar\" }\n" +
                 "}";
         FirecrawlDocument doc = GSON.fromJson(json, FirecrawlDocument.class);
@@ -42,6 +44,8 @@ public class FirecrawlDocumentV2ModelTest {
         assertNotNull(doc.getActions().getPdfs());
         assertNotNull(doc.getChangeTracking());
         assertEquals("changed", doc.getChangeTracking().getChangeStatus());
+        assertNotNull(doc.getBranding());
+        assertEquals("partial", doc.getWarning());
     }
 
     @Test

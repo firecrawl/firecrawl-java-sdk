@@ -28,6 +28,10 @@ public class FirecrawlClient {
     private final ScrapeService scrapeService;
     private final MapService mapService;
     private final CrawlService crawlService;
+    private final BatchScrapeService batchScrapeService;
+    private final AgentService agentService;
+    private final ExtractService extractService;
+    private final AccountService accountService;
 
     /**
      * Creates a new FirecrawlClient with the specified API key, API URL, and timeout.
@@ -56,6 +60,10 @@ public class FirecrawlClient {
         this.scrapeService = new ScrapeService(this);
         this.mapService = new MapService(this);
         this.crawlService = new CrawlService(this);
+        this.batchScrapeService = new BatchScrapeService(this);
+        this.agentService = new AgentService(this);
+        this.extractService = new ExtractService(this);
+        this.accountService = new AccountService(this);
     }
 
     /**
@@ -233,10 +241,129 @@ public class FirecrawlClient {
     }
 
     /**
+     * v2: Gets crawl errors.
+     */
+    public CrawlErrorsResponse getCrawlErrors(String id) throws IOException, FirecrawlException {
+        return crawlService.getCrawlErrors(id);
+    }
+
+    /**
+     * v2: Gets active crawls.
+     */
+    public CrawlActiveResponse getActiveCrawls() throws IOException, FirecrawlException {
+        return crawlService.getActiveCrawls();
+    }
+
+    /**
      * v2: Preview crawl parameters derived from a URL and prompt.
      */
     public JsonObject crawlParamsPreview(String url, String prompt) throws IOException, FirecrawlException {
         return crawlService.crawlParamsPreview(url, prompt);
+    }
+
+    /**
+     * v2: Starts a batch scrape job.
+     */
+    public BatchScrapeResponse batchScrape(BatchScrapeParams params) throws IOException, FirecrawlException {
+        return batchScrapeService.batchScrape(params, null);
+    }
+
+    /**
+     * v2: Starts a batch scrape job with idempotency key.
+     */
+    public BatchScrapeResponse batchScrape(BatchScrapeParams params, String idempotencyKey) throws IOException, FirecrawlException {
+        return batchScrapeService.batchScrape(params, idempotencyKey);
+    }
+
+    /**
+     * v2: Gets batch scrape status.
+     */
+    public BatchScrapeStatusResponse getBatchScrapeStatus(String id) throws IOException, FirecrawlException {
+        return batchScrapeService.getBatchScrapeStatus(id);
+    }
+
+    /**
+     * v2: Gets batch scrape errors.
+     */
+    public BatchScrapeErrorsResponse getBatchScrapeErrors(String id) throws IOException, FirecrawlException {
+        return batchScrapeService.getBatchScrapeErrors(id);
+    }
+
+    /**
+     * v2: Cancels a batch scrape job.
+     */
+    public BatchScrapeCancelResponse cancelBatchScrape(String id) throws IOException, FirecrawlException {
+        return batchScrapeService.cancelBatchScrape(id);
+    }
+
+    /**
+     * v2: Creates an agent job.
+     */
+    public AgentResponse createAgent(AgentParams params) throws IOException, FirecrawlException {
+        return agentService.createAgent(params);
+    }
+
+    /**
+     * v2: Gets agent status.
+     */
+    public AgentStatusResponse getAgentStatus(String id) throws IOException, FirecrawlException {
+        return agentService.getAgentStatus(id);
+    }
+
+    /**
+     * v2: Cancels an agent job.
+     */
+    public AgentCancelResponse cancelAgent(String id) throws IOException, FirecrawlException {
+        return agentService.cancelAgent(id);
+    }
+
+    /**
+     * v2: Starts an extract job.
+     */
+    public ExtractResponse extract(ExtractParams params) throws IOException, FirecrawlException {
+        return extractService.extract(params);
+    }
+
+    /**
+     * v2: Gets extract status.
+     */
+    public ExtractStatusResponse getExtractStatus(String id) throws IOException, FirecrawlException {
+        return extractService.getExtractStatus(id);
+    }
+
+    /**
+     * v2: Gets credit usage.
+     */
+    public AccountCreditUsageResponse getCreditUsage() throws IOException, FirecrawlException {
+        return accountService.getCreditUsage();
+    }
+
+    /**
+     * v2: Gets historical credit usage.
+     */
+    public AccountCreditsHistoricalResponse getCreditUsageHistorical() throws IOException, FirecrawlException {
+        return accountService.getCreditUsageHistorical();
+    }
+
+    /**
+     * v2: Gets token usage.
+     */
+    public AccountTokenUsageResponse getTokenUsage() throws IOException, FirecrawlException {
+        return accountService.getTokenUsage();
+    }
+
+    /**
+     * v2: Gets historical token usage.
+     */
+    public AccountTokensHistoricalResponse getTokenUsageHistorical() throws IOException, FirecrawlException {
+        return accountService.getTokenUsageHistorical();
+    }
+
+    /**
+     * v2: Gets queue status.
+     */
+    public AccountQueueStatusResponse getQueueStatus() throws IOException, FirecrawlException {
+        return accountService.getQueueStatus();
     }
 
     /**

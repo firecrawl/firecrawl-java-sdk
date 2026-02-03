@@ -62,14 +62,10 @@ public class FirecrawlClientIntegrationTest {
 
         // Verify that example.com contains the expected text parts (case-insensitive)
         String textLower = text.toLowerCase();
-        assertTrue(textLower.contains("domain is for use in illustrative examples"), 
-                "Example.com should contain text about being for illustrative examples");
-        assertTrue(textLower.contains("in documents"), 
-                "Example.com should mention documents");
-        assertTrue(textLower.contains("without prior coordination"), 
-                "Example.com should mention without prior coordination");
-        assertTrue(textLower.contains("asking for permission"), 
-                "Example.com should mention asking for permission");
+        assertTrue(textLower.contains("documentation examples") || textLower.contains("illustrative examples"),
+                "Example.com should mention examples");
+        assertTrue(textLower.contains("without needing permission") || textLower.contains("without prior coordination"),
+                "Example.com should mention no permission/coordination needed");
     }
 
     @Test
@@ -90,14 +86,10 @@ public class FirecrawlClientIntegrationTest {
 
         // Verify that example.com contains the expected text parts (case-insensitive)
         String textLower = text.toLowerCase();
-        assertTrue(textLower.contains("domain is for use in illustrative examples"), 
-                "Example.com should contain text about being for illustrative examples");
-        assertTrue(textLower.contains("in documents"), 
-                "Example.com should mention documents");
-        assertTrue(textLower.contains("without prior coordination"), 
-                "Example.com should mention without prior coordination");
-        assertTrue(textLower.contains("asking for permission"), 
-                "Example.com should mention asking for permission");
+        assertTrue(textLower.contains("documentation examples") || textLower.contains("illustrative examples"),
+                "Example.com should mention examples");
+        assertTrue(textLower.contains("without needing permission") || textLower.contains("without prior coordination"),
+                "Example.com should mention no permission/coordination needed");
     }
 
     @Test
@@ -120,14 +112,10 @@ public class FirecrawlClientIntegrationTest {
 
         // Verify that example.com contains the expected text parts (case-insensitive)
         String textLower = text.toLowerCase();
-        assertTrue(textLower.contains("domain is for use in illustrative examples"), 
-                "Example.com should contain text about being for illustrative examples");
-        assertTrue(textLower.contains("in documents"), 
-                "Example.com should mention documents");
-        assertTrue(textLower.contains("without prior coordination"), 
-                "Example.com should mention without prior coordination");
-        assertTrue(textLower.contains("asking for permission"), 
-                "Example.com should mention asking for permission");
+        assertTrue(textLower.contains("documentation examples") || textLower.contains("illustrative examples"),
+                "Example.com should mention examples");
+        assertTrue(textLower.contains("without needing permission") || textLower.contains("without prior coordination"),
+                "Example.com should mention no permission/coordination needed");
     }
     @Test
     public void testMapIntegration() throws Exception {

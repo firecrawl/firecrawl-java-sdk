@@ -19,6 +19,11 @@ public class SearchParams extends BaseParams<SearchParams> {
     private ScrapeParams scrapeOptions;
     // v2: support multiple search sources (e.g., "web", "news", "images")
     private String[] sources;
+    // v2: allow object sources (e.g., { type: "web" })
+    private Object[] sourcesAny;
+    // v2: categories for specialized searches
+    private String[] categories;
+    private Object[] categoriesAny;
 
     /**
      * Creates a new SearchParams instance with the required query.
@@ -241,6 +246,51 @@ public class SearchParams extends BaseParams<SearchParams> {
         this.sources = sources;
         return self();
     }
+
+    /**
+     * v2: Returns the search sources allowing object entries.
+     */
+    public Object[] getSourcesAny() {
+        return sourcesAny;
+    }
+
+    /**
+     * v2: Sets the search sources allowing object entries.
+     */
+    public SearchParams setSourcesAny(Object[] sourcesAny) {
+        this.sourcesAny = sourcesAny;
+        return self();
+    }
+
+    /**
+     * v2: Returns the search categories.
+     */
+    public String[] getCategories() {
+        return categories;
+    }
+
+    /**
+     * v2: Sets the search categories.
+     */
+    public SearchParams setCategories(String[] categories) {
+        this.categories = categories;
+        return self();
+    }
+
+    /**
+     * v2: Returns the search categories allowing object entries.
+     */
+    public Object[] getCategoriesAny() {
+        return categoriesAny;
+    }
+
+    /**
+     * v2: Sets the search categories allowing object entries.
+     */
+    public SearchParams setCategoriesAny(Object[] categoriesAny) {
+        this.categoriesAny = categoriesAny;
+        return self();
+    }
     
     @Override
     public boolean equals(Object o) {
@@ -257,12 +307,20 @@ public class SearchParams extends BaseParams<SearchParams> {
                 Objects.equals(timeout, that.timeout) &&
                 Objects.equals(ignoreInvalidURLs, that.ignoreInvalidURLs) &&
                 Objects.equals(scrapeOptions, that.scrapeOptions) &&
-                java.util.Arrays.equals(sources, that.sources);
+                java.util.Arrays.equals(sources, that.sources) &&
+                java.util.Arrays.equals(sourcesAny, that.sourcesAny) &&
+                java.util.Arrays.equals(categories, that.categories) &&
+                java.util.Arrays.equals(categoriesAny, that.categoriesAny);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), query, limit, tbs, lang, country, location, timeout, ignoreInvalidURLs, scrapeOptions) * 31 + java.util.Arrays.hashCode(sources);
+        int result = Objects.hash(super.hashCode(), query, limit, tbs, lang, country, location, timeout, ignoreInvalidURLs, scrapeOptions);
+        result = 31 * result + java.util.Arrays.hashCode(sources);
+        result = 31 * result + java.util.Arrays.hashCode(sourcesAny);
+        result = 31 * result + java.util.Arrays.hashCode(categories);
+        result = 31 * result + java.util.Arrays.hashCode(categoriesAny);
+        return result;
     }
 
     @Override
@@ -278,6 +336,9 @@ public class SearchParams extends BaseParams<SearchParams> {
                 ", ignoreInvalidURLs=" + ignoreInvalidURLs +
                 ", scrapeOptions=" + scrapeOptions +
                 ", sources=" + java.util.Arrays.toString(sources) +
+                ", sourcesAny=" + java.util.Arrays.toString(sourcesAny) +
+                ", categories=" + java.util.Arrays.toString(categories) +
+                ", categoriesAny=" + java.util.Arrays.toString(categoriesAny) +
                 '}';
     }
 }

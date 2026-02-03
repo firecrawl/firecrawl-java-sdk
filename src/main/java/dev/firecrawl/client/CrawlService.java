@@ -87,9 +87,25 @@ class CrawlService extends BaseService {
         if (params != null) {
             if (params.getScrapeOptions() != null) body.add("scrapeOptions", gson.toJsonTree(params.getScrapeOptions()));
             if (params.getPrompt() != null) body.addProperty("prompt", params.getPrompt());
+            if (params.getExcludePaths() != null) body.add("excludePaths", gson.toJsonTree(params.getExcludePaths()));
+            if (params.getIncludePaths() != null) body.add("includePaths", gson.toJsonTree(params.getIncludePaths()));
             if (params.getCrawlEntireDomain() != null) body.addProperty("crawlEntireDomain", params.getCrawlEntireDomain());
             if (params.getMaxDiscoveryDepth() != null) body.addProperty("maxDiscoveryDepth", params.getMaxDiscoveryDepth());
             if (params.getSitemap() != null) body.addProperty("sitemap", params.getSitemap());
+            if (params.getIgnoreQueryParameters() != null) body.addProperty("ignoreQueryParameters", params.getIgnoreQueryParameters());
+            if (params.getLimit() != null) body.addProperty("limit", params.getLimit());
+            if (params.getAllowExternalLinks() != null) body.addProperty("allowExternalLinks", params.getAllowExternalLinks());
+            if (params.getAllowSubdomains() != null) body.addProperty("allowSubdomains", params.getAllowSubdomains());
+            if (params.getDelay() != null) body.addProperty("delay", params.getDelay());
+            if (params.getMaxConcurrency() != null) body.addProperty("maxConcurrency", params.getMaxConcurrency());
+            if (params.getWebhookConfig() != null) {
+                body.add("webhook", gson.toJsonTree(params.getWebhookConfig()));
+            } else if (params.getWebhook() != null) {
+                com.google.gson.JsonObject webhook = new com.google.gson.JsonObject();
+                webhook.addProperty("url", params.getWebhook());
+                body.add("webhook", webhook);
+            }
+            if (params.getZeroDataRetention() != null) body.addProperty("zeroDataRetention", params.getZeroDataRetention());
         }
         
         Request request = buildRequest("/v2/crawl", body, idempotencyKey);
@@ -130,6 +146,23 @@ class CrawlService extends BaseService {
                 .build();
                 
         return executeRequest(request, CancelCrawlJobResponse.class);
+    }
+
+    /**
+     * v2: Gets crawl errors.
+     */
+    dev.firecrawl.model.CrawlErrorsResponse getCrawlErrors(String id) throws IOException, FirecrawlException {
+        Objects.requireNonNull(id, "Crawl job ID must not be null");
+        Request request = buildRequest("/v2/crawl/" + id + "/errors", null, null, "GET");
+        return executeRequest(request, dev.firecrawl.model.CrawlErrorsResponse.class);
+    }
+
+    /**
+     * v2: Gets active crawls.
+     */
+    dev.firecrawl.model.CrawlActiveResponse getActiveCrawls() throws IOException, FirecrawlException {
+        Request request = buildRequest("/v2/crawl/active", null, null, "GET");
+        return executeRequest(request, dev.firecrawl.model.CrawlActiveResponse.class);
     }
 
     /**

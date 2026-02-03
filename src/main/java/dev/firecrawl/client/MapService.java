@@ -49,8 +49,17 @@ class MapService extends BaseService {
         if (params != null) {
             if (params.getIncludeSubdomains() != null) body.addProperty("includeSubdomains", params.getIncludeSubdomains());
             if (params.getSearch() != null) body.addProperty("search", params.getSearch());
-            if (params.getIgnoreSitemap() != null) body.addProperty("ignoreSitemap", params.getIgnoreSitemap());
             if (params.getLimit() != null) body.addProperty("limit", params.getLimit());
+            if (params.getSitemap() != null) {
+                body.addProperty("sitemap", params.getSitemap());
+            } else if (params.getIgnoreSitemap() != null) {
+                // Backward compatible mapping to new sitemap parameter
+                body.addProperty("sitemap", params.getIgnoreSitemap() ? "skip" : "include");
+            }
+            if (params.getIgnoreQueryParameters() != null) body.addProperty("ignoreQueryParameters", params.getIgnoreQueryParameters());
+            if (params.getIgnoreCache() != null) body.addProperty("ignoreCache", params.getIgnoreCache());
+            if (params.getLocation() != null) body.add("location", gson.toJsonTree(params.getLocation()));
+            if (params.getTimeout() != null) body.addProperty("timeout", params.getTimeout());
         }
         
         Request request = buildRequest("/v2/map", body);

@@ -16,6 +16,8 @@ public class FirecrawlDocument {
     private String[] links;
     private Actions actions;
     private ChangeTracking changeTracking;
+    private Map<String, Object> branding;
+    private String warning;
     private Map<String, Object> metadata;
 
     /**
@@ -91,6 +93,20 @@ public class FirecrawlDocument {
     }
 
     /**
+     * Returns branding info if provided.
+     */
+    public Map<String, Object> getBranding() {
+        return branding;
+    }
+
+    /**
+     * Returns warning if provided inside the data object.
+     */
+    public String getWarning() {
+        return warning;
+    }
+
+    /**
      * Returns the metadata associated with the document.
      *
      * @return the metadata
@@ -162,12 +178,14 @@ public class FirecrawlDocument {
                 Arrays.equals(links, that.links) &&
                 Objects.equals(actions, that.actions) &&
                 Objects.equals(changeTracking, that.changeTracking) &&
+                Objects.equals(branding, that.branding) &&
+                Objects.equals(warning, that.warning) &&
                 Objects.equals(metadata, that.metadata);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(markdown, summary, html, rawHtml, screenshot, actions, changeTracking, metadata);
+        int result = Objects.hash(markdown, summary, html, rawHtml, screenshot, actions, changeTracking, branding, warning, metadata);
         result = 31 * result + Arrays.hashCode(links);
         return result;
     }
@@ -183,6 +201,8 @@ public class FirecrawlDocument {
                 ", links=" + Arrays.toString(links) +
                 ", actions=" + (actions != null ? "present" : "null") +
                 ", changeTracking=" + (changeTracking != null ? "present" : "null") +
+                ", branding=" + (branding != null ? "present" : "null") +
+                ", warning='" + warning + '\'' +
                 ", metadata=" + metadata +
                 '}';
     }

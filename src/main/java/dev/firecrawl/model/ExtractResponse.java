@@ -1,28 +1,21 @@
 package dev.firecrawl.model;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Response from an asynchronous crawl request.
+ * Response from an extract request.
  */
-public class CrawlResponse extends BaseResponse {
+public class ExtractResponse extends BaseResponse {
     private String id;
-    private String url;
+    private String[] invalidURLs;
 
-    /**
-     * Returns the ID of the crawl job.
-     *
-     * @return the crawl job ID
-     */
     public String getId() {
         return id;
     }
 
-    /**
-     * Returns the URL associated with the crawl job if provided.
-     */
-    public String getUrl() {
-        return url;
+    public String[] getInvalidURLs() {
+        return invalidURLs;
     }
 
     @Override
@@ -30,23 +23,25 @@ public class CrawlResponse extends BaseResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        CrawlResponse that = (CrawlResponse) o;
+        ExtractResponse that = (ExtractResponse) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(url, that.url);
+                Arrays.equals(invalidURLs, that.invalidURLs);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id, url);
+        int result = Objects.hash(super.hashCode(), id);
+        result = 31 * result + Arrays.hashCode(invalidURLs);
+        return result;
     }
 
     @Override
     public String toString() {
-        return "CrawlResponse{" +
+        return "ExtractResponse{" +
                 "success=" + isSuccess() +
                 ", warning='" + getWarning() + '\'' +
                 ", id='" + id + '\'' +
-                ", url='" + url + '\'' +
+                ", invalidURLs=" + Arrays.toString(invalidURLs) +
                 '}';
     }
 }

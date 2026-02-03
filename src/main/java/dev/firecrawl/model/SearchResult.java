@@ -15,6 +15,8 @@ public class SearchResult {
     private String rawHtml;
     private String[] links;
     private String screenshot;
+    private Integer position;
+    private String category;
     private Metadata metadata;
 
     /**
@@ -114,6 +116,20 @@ public class SearchResult {
     }
 
     /**
+     * Returns the position of the search result if provided.
+     */
+    public Integer getPosition() {
+        return position;
+    }
+
+    /**
+     * Returns the category of the search result if provided.
+     */
+    public String getCategory() {
+        return category;
+    }
+
+    /**
      * Returns the metadata associated with the search result.
      *
      * @return the metadata
@@ -175,12 +191,14 @@ public class SearchResult {
                 Objects.equals(rawHtml, that.rawHtml) &&
                 Arrays.equals(links, that.links) &&
                 Objects.equals(screenshot, that.screenshot) &&
+                Objects.equals(position, that.position) &&
+                Objects.equals(category, that.category) &&
                 Objects.equals(metadata, that.metadata);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(title, description, url, markdown, html, rawHtml, screenshot, metadata);
+        int result = Objects.hash(title, description, url, markdown, html, rawHtml, screenshot, position, category, metadata);
         result = 31 * result + Arrays.hashCode(links);
         return result;
     }
@@ -196,6 +214,8 @@ public class SearchResult {
                 ", rawHtml='" + (rawHtml != null ? rawHtml.substring(0, Math.min(rawHtml.length(), 50)) + "..." : null) + '\'' +
                 ", links=" + Arrays.toString(links) +
                 ", screenshot='" + (screenshot != null ? "[base64 data]" : null) + '\'' +
+                ", position=" + position +
+                ", category='" + category + '\'' +
                 ", metadata=" + metadata +
                 '}';
     }

@@ -50,19 +50,15 @@ class SearchService extends BaseService {
         if (params.getTimeout() != null) body.addProperty("timeout", params.getTimeout());
         if (params.getIgnoreInvalidURLs() != null) body.addProperty("ignoreInvalidURLs", params.getIgnoreInvalidURLs());
         if (params.getScrapeOptions() != null) body.add("scrapeOptions", gson.toJsonTree(params.getScrapeOptions()));
-        // Enforce current constraint: sources can only be "web"
-        if (params.getSources() != null) {
-            com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
-            boolean hasWeb = false;
-            for (String s : params.getSources()) {
-                if (s != null && s.equalsIgnoreCase("web")) {
-                    hasWeb = true;
-                    break;
-                }
-            }
-            // Regardless of input, only send "web" (default to web if not provided)
-            arr.add("web");
-            body.add("sources", arr);
+        if (params.getSourcesAny() != null) {
+            body.add("sources", gson.toJsonTree(params.getSourcesAny()));
+        } else if (params.getSources() != null) {
+            body.add("sources", gson.toJsonTree(params.getSources()));
+        }
+        if (params.getCategoriesAny() != null) {
+            body.add("categories", gson.toJsonTree(params.getCategoriesAny()));
+        } else if (params.getCategories() != null) {
+            body.add("categories", gson.toJsonTree(params.getCategories()));
         }
 
         Request request = buildRequest("/v2/search", body);
