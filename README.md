@@ -26,7 +26,7 @@ Maven (pom.xml):
 <dependency>
     <groupId>com.github.firecrawl</groupId>
     <artifactId>firecrawl-java-sdk</artifactId>
-    <version>2.1.0</version>
+    <version>2.0</version>
 </dependency>
 ```
 
@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.firecrawl:firecrawl-java-sdk:2.1.0'
+    implementation 'com.github.firecrawl:firecrawl-java-sdk:2.0'
 }
 ```
 
