@@ -2,6 +2,18 @@
 
 A Java client library for the [Firecrawl API](https://firecrawl.dev), providing web crawling, scraping, and search capabilities.
 
+---
+
+## ⚠️ DEPRECATION NOTICE
+
+**This repository is deprecated.** Do not use this copy for new projects or updates.
+
+**Use the official Firecrawl Java SDK instead:** [https://docs.firecrawl.dev/sdks/java](https://docs.firecrawl.dev/sdks/java)
+
+The official docs are the canonical source for installation, usage, and the latest SDK information.
+
+---
+
 ## Requirements
 
 - Java 17 or higher
