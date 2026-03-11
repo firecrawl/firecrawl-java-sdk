@@ -8,9 +8,9 @@ A Java client library for the [Firecrawl API](https://firecrawl.dev), providing 
 
 **This repository is deprecated.** Do not use this copy for new projects or updates.
 
-**Use the official Firecrawl Java SDK instead:** [https://github.com/firecrawl/firecrawl-java-sdk](https://github.com/firecrawl/firecrawl-java-sdk)
+**Use the official Firecrawl Java SDK instead:** [https://docs.firecrawl.dev/sdks/java](https://docs.firecrawl.dev/sdks/java)
 
-The official repository is the canonical, maintained source for the latest releases, documentation, and support.
+The official docs are the canonical source for installation, usage, and the latest SDK information.
 
 ---
 
